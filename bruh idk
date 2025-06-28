@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Decision-Making & Automation Bias</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a2a;
+            color: #e0e0ff;
+        }
+
+        /* --- Custom Animations --- */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(132, 106, 255, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 0 25px rgba(132, 106, 255, 0.7); }
+        }
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        /* --- Animation Utility Classes --- */
+        .fade-in { animation: fadeIn 1s ease-in-out forwards; }
+        .fade-in-up { animation: fadeInUp 0.8s ease-in-out forwards; }
+        .slide-in-left { animation: slideInLeft 0.8s ease-out forwards; }
+        .slide-in-right { animation: slideInRight 0.8s ease-out forwards; }
+
+        /* --- Styling for interactive elements --- */
+        .interactive-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .interactive-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(132, 106, 255, 0.3);
+        }
+        .danger-card .icon-container {
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        .danger-card:hover .icon-container {
+            transform: scale(1.1);
+            background-color: #ef4444;
+        }
+        
+        .mitigation-card .content-hidden {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, opacity 0.5s ease-out, margin-top 0.5s ease-out;
+            margin-top: 0;
+        }
+        .mitigation-card:hover .content-hidden {
+            max-height: 200px; /* Adjust as needed */
+            opacity: 1;
+            margin-top: 1rem;
+        }
+
+        /* --- Background Gradient Animation --- */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 10% 20%, rgba(132, 106, 255, 0.1), transparent 40%),
+                        radial-gradient(circle at 80% 90%, rgba(59, 130, 246, 0.1), transparent 40%);
+            animation: backgroundMove 20s infinite alternate;
+        }
+        @keyframes backgroundMove {
+            from { transform: translate(0, 0); }
+            to { transform: translate(5vw, -5vh); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto px-4 py-8 md:py-16">
+
+        <!-- Header -->
+        <header class="text-center mb-16 md:mb-24 fade-in">
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400">The Double-Edged Sword</h1>
+            <p class="text-lg md:text-xl text-indigo-200 max-w-3xl mx-auto">Navigating AI-Augmented Decisions and the Dangers of Automation Bias</p>
+        </header>
+
+        <!-- Section 1: Human + AI -->
+        <section class="mb-20 md:mb-32">
+            <div class="grid grid-cols-1 md:grid-cols-3 items-center gap-8">
+                <!-- Human -->
+                <div class="flex flex-col items-center text-center slide-in-left">
+                    <div class="p-6 rounded-full bg-blue-500/20 mb-4 border border-blue-400/50">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="text-blue-300" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white">Human Insight</h3>
+                    <p class="text-indigo-200">Intuition, context, and ethical judgment.</p>
+                </div>
+
+                <!-- Plus Symbol -->
+                <div class="flex justify-center text-5xl font-thin text-purple-400 fade-in" style="animation-delay: 0.5s;">+</div>
+
+                <!-- AI -->
+                <div class="flex flex-col items-center text-center slide-in-right">
+                    <div class="p-6 rounded-full bg-purple-500/20 mb-4 border border-purple-400/50">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="text-purple-300" viewBox="0 0 16 16"><path d="M6 12.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5ZM3 8.062C3 6.76 4.235 5.765 5.53 5.824a2.5 2.5 0 0 1 4.94 0C11.765 5.765 13 6.76 13 8.062v1.157a.933.933 0 0 1-.765.935c-.845.147-2.34.346-4.235.346-1.895 0-3.39-.2-4.235-.346A.933.933 0 0 1 3 9.219V8.062Zm4.542-.827a.25.25 0 0 0-.217.068l-.92.9a2.47 2.47 0 0 1-1.871-.444l-.002-.001.002.001a.25.25 0 0 0-.363-.043l-.89.89a.25.25 0 0 0 .043.363l.89-.89a2.47 2.47 0 0 1 1.871.444l.92-.9a.25.25 0 0 0-.068-.217Z M12.21 9.682a.25.25 0 0 0-.363.043l-.89.89a.25.25 0 0 0 .363.363l.89-.89a.25.25 0 0 0-.043-.363Z"/></svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white">AI Analysis</h3>
+                    <p class="text-indigo-200">Data processing, pattern recognition, and speed.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Automation Bias -->
+        <section class="mb-20 md:mb-32 p-8 rounded-2xl bg-slate-900/50 border border-purple-500/30 fade-in-up">
+            <div class="text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-3 text-white">The Hidden Pitfall: Automation Bias</h2>
+                <p class="text-indigo-200 max-w-4xl mx-auto mb-10">Automation bias is our tendency to over-trust and favor suggestions from automated systems, even when they contradict our own judgment or other evidence.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Interactive Example 1: Medical Diagnosis -->
+                <div class="interactive-card p-6 rounded-lg bg-gray-800/50 border border-gray-700/50">
+                    <div class="flex items-center mb-4">
+                        <div class="p-3 mr-4 rounded-md bg-blue-500/20">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="text-blue-300" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg>
+                        </div>
+                        <h4 class="text-xl font-semibold text-white">Scenario: Medical Diagnosis</h4>
+                    </div>
+                    <p class="text-indigo-200 mb-4">A radiologist reviews a chest X-ray. Their initial thought is that a faint shadow looks suspicious.</p>
+                    <div class="mt-4 p-4 rounded-lg bg-purple-900/50 border border-purple-600/50 relative group">
+                        <p class="font-semibold text-purple-200 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-10.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 001.414 1.414L9 9.414V12a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414l-3-3z" clip-rule="evenodd" /></svg>
+                             AI Suggestion: "No abnormalities detected."
+                        </p>
+                        <div class="absolute inset-0 bg-green-500/80 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <p class="text-center font-bold text-white text-lg p-4">Correct Action: <br/> Human overrides AI and orders a follow-up CT scan, correctly identifying an early-stage tumor.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Interactive Example 2: Financial Loan -->
+                <div class="interactive-card p-6 rounded-lg bg-gray-800/50 border border-gray-700/50">
+                    <div class="flex items-center mb-4">
+                         <div class="p-3 mr-4 rounded-md bg-green-500/20">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="text-green-300" viewBox="0 0 16 16"><path d="M4 10.781c.524 1.637 1.976 2.718 3.645 2.718s3.121-1.081 3.645-2.718A2.5 2.5 0 1 0 10.5 6h-5a2.5 2.5 0 1 0-1.5 4.781zM10.5 5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/><path d="M0 8a8 8 0 1 0 16 0A8 8 0 0 0 0 8zm15 0a7 7 0 1 1-14 0 7 7 0 0 1 14 0z"/></svg>
+                        </div>
+                        <h4 class="text-xl font-semibold text-white">Scenario: Loan Application</h4>
+                    </div>
+                    <p class="text-indigo-200 mb-4">A loan officer reviews an application from a small business owner with a non-traditional income history.</p>
+                     <div class="mt-4 p-4 rounded-lg bg-purple-900/50 border border-purple-600/50 relative group">
+                        <p class="font-semibold text-purple-200 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-10.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 001.414 1.414L9 9.414V12a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414l-3-3z" clip-rule="evenodd" /></svg>
+                            AI Suggestion: "DENY - High risk."
+                        </p>
+                        <div class="absolute inset-0 bg-red-500/80 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                             <p class="text-center font-bold text-white text-lg p-4">Incorrect Action: <br/> Officer accepts AI's verdict without further review, denying a loan to a potentially successful business.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Section 3: The Dangers -->
+        <section class="mb-20 md:mb-32">
+            <div class="text-center mb-12 fade-in-up">
+                <h2 class="text-3xl md:text-4xl font-bold mb-3 text-white">The Real-World Consequences</h2>
+                <p class="text-indigo-200 max-w-2xl mx-auto">Unchecked bias can lead to critical errors across various domains.</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Danger Card 1 -->
+                <div class="danger-card text-center p-6 bg-slate-900/50 rounded-lg border border-red-500/30" style="animation: fadeInUp 0.5s ease-out 0.2s backwards;">
+                    <div class="icon-container inline-block p-4 rounded-full bg-red-500/20 mb-4 border border-red-400/50">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="text-red-300" viewBox="0 0 16 16"><path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5H3v5.5A1.5 1.5 0 0 0 4.5 14h7a1.5 1.5 0 0 0 1.5-1.5V7.5h1.5a.5.5 0 0 0 .354-.854l-6-6zM4.5 13V7.207l3.5-3.5 3.5 3.5V13h-7z"/><path d="M7 11.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5z"/></svg>
+                    </div>
+                    <h4 class="text-xl font-semibold text-white mb-2">Hiring & Recruitment</h4>
+                    <p class="text-indigo-200 text-sm">AI trained on biased data can perpetuate discrimination, filtering out qualified diverse candidates.</p>
+                </div>
+                <!-- Danger Card 2 -->
+                <div class="danger-card text-center p-6 bg-slate-900/50 rounded-lg border border-red-500/30" style="animation: fadeInUp 0.5s ease-out 0.4s backwards;">
+                    <div class="icon-container inline-block p-4 rounded-full bg-red-500/20 mb-4 border border-red-400/50">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="text-red-300" viewBox="0 0 16 16"><path d="M4.5 2a2.5 2.5 0 0 1 2.5 2.5v.5h4v-.5A2.5 2.5 0 0 1 13.5 2h-7zM11 7V6.5A1.5 1.5 0 0 0 9.5 5h-3A1.5 1.5 0 0 0 5 6.5V7H1.531a.5.5 0 0 0-.469.362l-1 4A.5.5 0 0 0 .531 12h14.938a.5.5 0 0 0 .469-.638l-1-4A.5.5 0 0 0 14.469 7H11z"/></svg>
+                    </div>
+                    <h4 class="text-xl font-semibold text-white mb-2">Legal Systems</h4>
+                    <p class="text-indigo-200 text-sm">Flawed AI risk assessments can lead to unfair bail and sentencing decisions, amplifying societal inequalities.</p>
+                </div>
+                 <!-- Danger Card 3 -->
+                <div class="danger-card text-center p-6 bg-slate-900/50 rounded-lg border border-red-500/30" style="animation: fadeInUp 0.5s ease-out 0.6s backwards;">
+                    <div class="icon-container inline-block p-4 rounded-full bg-red-500/20 mb-4 border border-red-400/50">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="text-red-300" viewBox="0 0 16 16"><path d="M1.523 7.37.22 8.718a.5.5 0 0 0 .444.852l.243-.105a1 1 0 0 1 1.213.064l.938.832a1 1 0 0 1 .114 1.348l-.48.602a1 1 0 0 1-1.28.326l-1.33-1.042a.5.5 0 0 0-.822.427v1.819a.5.5 0 0 0 .584.492l1.033-.215a1 1 0 0 1 1.05.254l.82.968a1 1 0 0 1 .114 1.348l-.48.602a1 1 0 0 1-1.28.325l-1.33-1.041a.5.5 0 0 0-.822.427v1.87a.5.5 0 0 0 .584.492l1.033-.215a1 1 0 0 1 1.05.254l.82.968a1 1 0 0 1-.015 1.41l-.09.08a.5.5 0 0 0 .69.73l1.125-.469a1 1 0 0 1 1.132.22l.854.854a.5.5 0 0 0 .708 0l.854-.854a1 1 0 0 1 1.132-.22l1.125.469a.5.5 0 0 0 .69-.73l-.09-.08a1 1 0 0 1-.015-1.41l.82-.968a1 1 0 0 1 1.05-.254l1.033.215a.5.5 0 0 0 .584-.492v-1.87a.5.5 0 0 0-.822-.427l-1.33 1.041a1 1 0 0 1-1.28-.325l-.48-.602a1 1 0 0 1 .114-1.348l.82-.968a1 1 0 0 1 1.05-.254l1.033.215a.5.5 0 0 0 .584-.492v-1.819a.5.5 0 0 0-.822-.427l-1.33 1.042a1 1 0 0 1-1.28-.326l-.48-.602a1 1 0 0 1 .114-1.348l.938-.832a1 1 0 0 1 1.213-.064l.243.105a.5.5 0 0 0 .444-.852l-1.303-1.348a.5.5 0 0 0-.708 0L8.5 2.293 7.793 1.586a.5.5 0 0 0-.708-.708L6.377 1.586l-.708.708-.707-.707a.5.5 0 0 0-.708 0L2.946 3.193l-.707.707-.708-.707a.5.5 0 0 0-.708 0l-.6.6z"/></svg>
+                    </div>
+                    <h4 class="text-xl font-semibold text-white mb-2">Atrophied Skills</h4>
+                    <p class="text-indigo-200 text-sm">Over-reliance on AI can dull our own critical thinking and decision-making capabilities over time.</p>
+                </div>
+                 <!-- Danger Card 4 -->
+                <div class="danger-card text-center p-6 bg-slate-900/50 rounded-lg border border-red-500/30" style="animation: fadeInUp 0.5s ease-out 0.8s backwards;">
+                    <div class="icon-container inline-block p-4 rounded-full bg-red-500/20 mb-4 border border-red-400/50">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="text-red-300" viewBox="0 0 16 16"><path d="M11 1.5a.5.5 0 0 1 .5.5v11.5a.5.5 0 0 1-1 0V2a.5.5 0 0 1 .5-.5zm-2.5 0a.5.5 0 0 1 .5.5v11.5a.5.5 0 0 1-1 0V2a.5.5 0 0 1 .5-.5zm-2.5 0a.5.5 0 0 1 .5.5v11.5a.5.5 0 0 1-1 0V2a.5.5 0 0 1 .5-.5zm-2.5 0a.5.5 0 0 1 .5.5v11.5a.5.5 0 0 1-1 0V2a.5.5 0 0 1 .5-.5zM1 1.5a.5.5 0 0 1 .5.5v11.5a.5.5 0 0 1-1 0V2a.5.5 0 0 1 .5-.5z"/></svg>
+                    </div>
+                    <h4 class="text-xl font-semibold text-white mb-2">Lack of Accountability</h4>
+                    <p class="text-indigo-200 text-sm">When errors occur, it can be difficult to assign responsibility. "The computer did it" becomes a common excuse.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Mitigation Strategies -->
+        <section>
+            <div class="text-center mb-12 fade-in-up">
+                <h2 class="text-3xl md:text-4xl font-bold mb-3 text-white">How to Mitigate the Risk</h2>
+                <p class="text-indigo-200 max-w-2xl mx-auto">Use AI as a co-pilot, not an auto-pilot. Hover over each strategy to learn more.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Strategy 1 -->
+                <div class="mitigation-card p-6 bg-gray-800/50 rounded-lg border border-gray-700/50 cursor-pointer overflow-hidden">
+                    <h4 class="text-xl font-semibold text-white">1. Treat AI as an Input, Not an Answer</h4>
+                    <div class="content-hidden text-indigo-200">
+                        <p>View the AI's output as one piece of evidence among many. Combine it with your own expertise, other data sources, and common sense before making a final decision.</p>
+                    </div>
+                </div>
+                <!-- Strategy 2 -->
+                <div class="mitigation-card p-6 bg-gray-800/50 rounded-lg border border-gray-700/50 cursor-pointer overflow-hidden">
+                    <h4 class="text-xl font-semibold text-white">2. Actively Seek Disconfirming Evidence</h4>
+                    <div class="content-hidden text-indigo-200">
+                        <p>Don't just look for data that supports the AI's suggestion. Intentionally challenge its output. Ask, "What if this is wrong?" and look for evidence that points to an alternative conclusion.</p>
+                    </div>
+                </div>
+                <!-- Strategy 3 -->
+                <div class="mitigation-card p-6 bg-gray-800/50 rounded-lg border border-gray-700/50 cursor-pointer overflow-hidden">
+                    <h4 class="text-xl font-semibold text-white">3. Understand the AI's Limitations</h4>
+                    <div class="content-hidden text-indigo-200">
+                        <p>Know what data the AI was trained on and what its blind spots might be. No AI is perfect. Understanding its potential for error is key to using it wisely.</p>
+                    </div>
+                </div>
+                <!-- Strategy 4 -->
+                <div class="mitigation-card p-6 bg-gray-800/50 rounded-lg border border-gray-700/50 cursor-pointer overflow-hidden">
+                    <h4 class="text-xl font-semibold text-white">4. Make Your Independent Judgement First</h4>
+                    <div class="content-hidden text-indigo-200">
+                        <p>Where possible, form your own opinion before consulting the AI. This helps to anchor your thinking and reduces the chance of being unduly swayed by the system's suggestion.</p>
+                    </div>
+                </div>
+                <!-- Strategy 5 -->
+                <div class="mitigation-card p-6 bg-gray-800/50 rounded-lg border border-gray-700/50 cursor-pointer overflow-hidden">
+                    <h4 class="text-xl font-semibold text-white">5. Encourage a Culture of Healthy Skepticism</h4>
+                    <div class="content-hidden text-indigo-200">
+                        <p>In a team setting, create an environment where it's safe and encouraged to question and challenge AI-driven recommendations. The final responsibility always rests with a human.</p>
+                    </div>
+                </div>
+                <!-- Strategy 6 -->
+                <div class="mitigation-card p-6 bg-gray-800/50 rounded-lg border border-gray-700/50 cursor-pointer overflow-hidden">
+                     <h4 class="text-xl font-semibold text-white">6. Demand Explainable AI (XAI)</h4>
+                    <div class="content-hidden text-indigo-200">
+                        <p>Advocate for and use AI systems that can explain the 'why' behind their recommendations. A black box is harder to trust and critique than a system that shows its work.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-center mt-16 md:mt-24 pt-8 border-t border-purple-500/20 fade-in">
+            <p class="text-indigo-300">The future is a partnership. Make informed decisions.</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>
